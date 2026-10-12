@@ -13,6 +13,8 @@ import type { InsteadHook } from '@revenge-mod/patcher/types'
 import type { FC, MemoExoticComponent, ReactElement, ReactNode } from 'react'
 import type { PressableProps } from 'react-native'
 
+let stopped = false
+
 export default plugin({
 	start({ cleanup, plugin }) {
 		// Patches the MediaKeyboardImage component to wrap its children in a SizeTagWrapper if we have a URI
@@ -56,6 +58,8 @@ export default plugin({
 							}
 						})
 
+						if (stopped) return node_
+
 						const node = node_ as ReactElement<{ children?: ReactNode }>
 						if (node.props.children == null) return node
 
@@ -76,6 +80,9 @@ export default plugin({
 				},
 			),
 		)
+	},
+	stop() {
+		stopped = true
 	},
 })
 
